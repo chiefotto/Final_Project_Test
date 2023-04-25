@@ -7,7 +7,7 @@
     <title>Teams</title>
     <link rel="stylesheet" href="style.css" />
 </head>
-<body>
+<body onload="getTeams()">
     <div>
         
         <div class="header">
@@ -25,10 +25,13 @@
 
 
         <div>
-            <form class="main-form">
+            <!-- <form class="main-form">
                 <button type="button" id="load-teams">Load Teams</button>
-            </form>
-
+            </form> -->
+            <h2>Teams</h2>
+            <ol id="team_list">
+              A list of Teams
+            </ol>
 
 
         </div>
