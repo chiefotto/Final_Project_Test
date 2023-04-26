@@ -45,15 +45,38 @@ function injectHTML(list) {
     console.log('fired injectHTML');
     const target = document.querySelector('#team_list');
     target.innerHTML = '';
-    // console.log(typeof list)
+
+    var winList = {};
     list.forEach((item) => {
       const str = `<li>${item.team.name}: ${item.win.total}-${item.loss.total}</li>`;
+      winList[item.team.name] = item.win.total;
+
       target.innerHTML += str;
     })
-    // Array.prototype.forEach.call(list, item => {
-    //     const str = `<li>${item.name}</li>`;
-    //     target.innerHTML += str;
-    // });
+
+    var values = Object.keys(winList).map(function(key){
+        return winList[key];
+    });
+
+    target.innerHTML += `<canvas id="piechart" width="400" height="400"></canvas>`;
+    const ctx = document.getElementById('piechart');
+
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+          labels: Object.keys(winList),
+            datasets: [{
+              label: "Number of Wins",
+              data: values,
+              backgroundColor: "",
+              hoverOffset: 4
+            }]
+      },
+      options: {
+
+      }
+    })
+
 }
 
 async function getTeams() {
