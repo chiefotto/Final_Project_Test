@@ -112,16 +112,16 @@ function filterList(list, query) {
 async function mainEvent(){
     console.log("Start");
     const mainForm = document.querySelector('.main_form');
-    // const teamForms = document.querySelector('#load-teams');
     const searchButton = document.querySelector("#search_button");
     const loadDataButton = document.querySelector("#data_load");
     const textField = document.querySelector("#search_field");
 
-    let storedList = [];
-    let currentList = [];
+    if (JSON.parse(localStorage.getItem('storedData')) != null) {
+        injectHTML(JSON.parse(localStorage.getItem('storedData')));
+    }
 
-    loadDataButton.addEventListener('click', async (submitEvent) => {// async has to be declared on every function that needs to "await" something
-        console.log("Loading data"); // this is substituting for a "breakpoint"
+    loadDataButton.addEventListener('click', async (submitEvent) => {
+        console.log("Loading data");
 
         const url = 'https://api-nba-v1.p.rapidapi.com/standings?league=standard&season=2021';
         const options = {
@@ -137,28 +137,27 @@ async function mainEvent(){
             let result = await response.text();
             result = JSON.parse(result);
             // console.table(result.response);
-            injectHTML(result.response);
-            storedList = result.response;
+            // injectHTML(result.response);
+            const storedList = result.response;
             localStorage.setItem('storedData', JSON.stringify(storedList));
+            injectHTML(JSON.parse(localStorage.getItem('storedData')));
         } catch (error) {
             console.error(error);
         }
     
-        console.table(storedList);
+        console.table(JSON.parse(localStorage.getItem('storedData')));
     });
     
     searchButton.addEventListener('click', (event) => {
         console.log("clicked filterButton");
-    
-        // this is the preferred way to handle form data in JS in 2022
+
+        const recallList = JSON.parse(localStorage.getItem('storedData'));
+
         const formData = new FormData(mainForm); // get the data from the listener target
         const formProps = Object.fromEntries(formData); // Turn it into an object
     
-        // You can also access all forms in a document by using the document.forms collection
-        // But this will retrieve ALL forms, not just the one that "heard" a submit event - less good
-    
         console.log(formProps);
-        const newList = filterList(storedList, formProps.search_field);
+        const newList = filterList(recallList, formProps.search_field);
     
         console.log(newList);
         injectHTML(newList)
@@ -166,7 +165,10 @@ async function mainEvent(){
 
     textField.addEventListener('input', (event) => {
         console.log('input', event.target.value);
-        const newList = filterList(storedList, event.target.value);
+
+        const recallList = JSON.parse(localStorage.getItem('storedData'));
+
+        const newList = filterList(recallList, event.target.value);
         console.log(newList);
         injectHTML(newList);
     });
