@@ -1,7 +1,6 @@
 # Final_Project_Test
 
-
-API: https://rapidapi.com/api-sports/api/api-nba
+https://rapidapi.com/api-sports/api/api-nba
 
 Website Name: StatPaddr
 
